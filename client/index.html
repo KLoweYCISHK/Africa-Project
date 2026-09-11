@@ -278,6 +278,40 @@ footer{margin-top:44px; padding-top:18px; border-top:1px solid var(--line); colo
   opacity:0; transition:opacity .25s ease; pointer-events:none; z-index:50;
 }
 .save-pill.show{opacity:1;}
+.admin-fab{
+  position:fixed; bottom:16px; left:16px; z-index:60;
+  font-family:"IBM Plex Mono",monospace; font-size:0.72rem; letter-spacing:0.04em;
+  background:var(--surface); border:1px solid var(--line-strong); color:var(--ink-soft);
+  padding:7px 14px; border-radius:20px; cursor:pointer; box-shadow:var(--shadow); opacity:0.55;
+}
+.admin-fab:hover{opacity:1; border-color:var(--accent); color:var(--accent-ink);}
+.modal-overlay{
+  position:fixed; inset:0; background:rgba(23,36,34,0.55); z-index:200;
+  display:flex; align-items:flex-start; justify-content:center; padding:5vh 20px; overflow-y:auto;
+}
+.modal-box{
+  background:var(--surface); border-radius:var(--radius-l); box-shadow:var(--shadow);
+  padding:26px 26px 22px; max-width:420px; width:100%; margin:auto;
+}
+.modal-box-wide{max-width:760px;}
+.modal-box h3{font-size:1.2rem; margin-bottom:6px;}
+.modal-sub{color:var(--ink-soft); font-size:0.88rem; margin:0 0 16px;}
+.modal-head{display:flex; align-items:center; justify-content:space-between; margin-bottom:4px; gap:12px;}
+.admin-section{margin-top:22px; padding-top:20px; border-top:1px solid var(--line);}
+.admin-section:first-of-type{margin-top:16px;}
+.admin-section h4{font-size:1.05rem; margin-bottom:6px;}
+.admin-class-block{margin-bottom:16px;}
+.admin-class-label{font-family:"IBM Plex Mono",monospace; font-size:0.7rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--ink-faint); margin-bottom:8px;}
+.admin-group-row{display:flex; align-items:center; justify-content:space-between; gap:10px; background:var(--paper); border:1px solid var(--line); border-radius:var(--radius-m); padding:10px 12px; margin-bottom:8px;}
+.admin-group-info{display:flex; flex-direction:column; gap:2px; font-size:0.88rem;}
+.admin-group-info span{color:var(--ink-faint); font-size:0.78rem;}
+.admin-group-row .reset-btn{white-space:nowrap;}
+.admin-crit-group{background:var(--paper); border:1px solid var(--line); border-radius:var(--radius-m); padding:14px; margin-bottom:14px;}
+.admin-crit-head{display:flex; gap:8px; margin-bottom:10px; flex-wrap:wrap;}
+.admin-group-name{flex:2; min-width:140px; font:inherit; font-weight:600; padding:7px 9px; border-radius:var(--radius-s); border:1px solid var(--line-strong); background:var(--surface); color:var(--ink);}
+.admin-group-marks{flex:0 0 90px; font:inherit; padding:7px 9px; border-radius:var(--radius-s); border:1px solid var(--line-strong); background:var(--surface); color:var(--ink);}
+.admin-item-row{display:flex; gap:8px; align-items:flex-start; margin-bottom:6px;}
+.admin-item-text{flex:1; resize:vertical; min-height:38px; font:inherit; font-size:0.88rem; padding:7px 9px; border-radius:var(--radius-s); border:1px solid var(--line-strong); background:var(--surface); color:var(--ink);}
 </style>
 
 </head>
@@ -430,6 +464,49 @@ footer{margin-top:44px; padding-top:18px; border-top:1px solid var(--line); colo
 <div class="save-pill" id="save-pill">Saved</div>
 </div>
 
+<button class="admin-fab" id="admin-fab" type="button">⚙ Admin</button>
+
+<div class="modal-overlay" id="admin-login-overlay" hidden>
+  <div class="modal-box">
+    <h3>Admin access</h3>
+    <p class="modal-sub">Enter the admin code to manage groups and the checklist.</p>
+    <div class="field">
+      <label for="admin-code-input">Admin code</label>
+      <input id="admin-code-input" type="password" autocomplete="off">
+    </div>
+    <div class="status-line" id="admin-login-status"></div>
+    <button class="primary-btn" id="admin-login-submit" type="button">Unlock</button>
+    <button class="secondary-btn" id="admin-login-cancel" type="button">Cancel</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="admin-panel-overlay" hidden>
+  <div class="modal-box modal-box-wide">
+    <div class="modal-head">
+      <h3>Admin panel</h3>
+      <button class="link-btn" id="admin-panel-close" type="button">Close</button>
+    </div>
+
+    <section class="admin-section">
+      <h4>Groups</h4>
+      <div class="note">Delete a group to permanently remove its saved progress.</div>
+      <div id="admin-groups-list"></div>
+    </section>
+
+    <section class="admin-section">
+      <h4>Must-have checklist</h4>
+      <div class="note">Edit wording, add new checklist points, or add a whole new criteria group. Changes apply for every class and group.</div>
+      <div id="admin-checklist-editor"></div>
+      <button class="add-source-btn" id="admin-add-group-btn" type="button">+ Add a criteria group</button>
+      <div style="display:flex; gap:10px; margin-top:14px; flex-wrap:wrap;">
+        <button class="primary-btn" id="admin-save-checklist-btn" type="button" style="margin-top:0; width:auto; padding-inline:20px;">Save checklist changes</button>
+        <button class="secondary-btn" id="admin-reset-checklist-btn" type="button" style="margin-top:0; width:auto; padding-inline:20px;">Reset to default</button>
+      </div>
+      <div class="status-line" id="admin-checklist-status"></div>
+    </section>
+  </div>
+</div>
+
 <script id="app-state" type="application/json">{"9.1":{"groups":{}},"9.2":{"groups":{}},"9.3":{"groups":{}},"9.4":{"groups":{}},"9.5":{"groups":{}},"9.6":{"groups":{}}}</script>
 
 <script>
@@ -551,8 +628,9 @@ var MASTER = [
     {id:"m7", text:"At least 3 negative impacts, each explained with evidence"},
     {id:"m8", text:"At least 3 positive or lasting impacts, each explained with evidence — or a reasoned explanation of why there are few"}
   ]},
-  {group:"Primary Sources", marks:"/6", items:[
-    {id:"m9", text:"At least 2 primary sources, clearly referenced and used as evidence"}
+  {group:"Primary Sources &amp; Bibliography", marks:"/6", items:[
+    {id:"m9", text:"At least 2 primary sources, clearly referenced and used as evidence"},
+    {id:"m9b", text:"A full bibliography lists every source used (websites, books, articles, images, videos) with enough detail to find it again"}
   ]},
   {group:"Delivery, Organisation &amp; Teamwork", marks:"/6", items:[
     {id:"m10", text:"Confident, rehearsed delivery with a logical structure — every member contributes clearly and equally"}
@@ -607,7 +685,7 @@ function slugify(s){
 }
 function empireById(id){ return EMPIRES.filter(function(e){ return e.id===id; })[0]; }
 function formatById(id){ return FORMATS.filter(function(f){ return f.id===id; })[0]; }
-function totalMasterItems(){ var n=0; MASTER.forEach(function(g){ n+=g.items.length; }); return n; }
+function totalMasterItems(){ var n=0; getMaster().forEach(function(g){ n+=g.items.length; }); return n; }
 function emptyGroupDoc(){ return {groupName:"", members:"", empire:"", format:"", region:"", checks:{}, bibliography:[], createdAt:"", updatedAt:""}; }
 
 /* ---------- state ---------- */
@@ -952,13 +1030,15 @@ window.addEventListener("beforeunload", function(){ if(app.dirty) flushSave(); }
 var masterListEl = document.getElementById("master-list");
 function renderProgress(){
   var total = totalMasterItems(), done = 0;
-  MASTER.forEach(function(g){ g.items.forEach(function(it){ if(app.doc.checks[it.id]) done++; }); });
+  getMaster().forEach(function(g){ g.items.forEach(function(it){ if(app.doc.checks[it.id]) done++; }); });
   document.getElementById("progress-num").textContent = done + " / " + total;
   document.getElementById("progress-bar").style.width = (total ? (done/total*100) : 0) + "%";
 }
 function renderMaster(){
+  var master = getMaster();
   var html = "";
-  MASTER.forEach(function(g){
+  var mainGroups = 0, mainMarks = 0, bonusMarks = 0;
+  master.forEach(function(g){
     html += '<div class="crit' + (g.bonus ? " bonus" : "") + '">';
     html += '<div class="crit-head"><h3>' + g.group + '</h3><span class="marks-badge">' + g.marks + '</span></div>';
     g.items.forEach(function(it){
@@ -968,8 +1048,15 @@ function renderMaster(){
       html += '<label for="chk-' + it.id + '">' + it.text + '</label></div>';
     });
     html += '</div>';
+    var m = parseInt(String(g.marks).replace(/[^0-9]/g,""), 10) || 0;
+    if(g.bonus){ bonusMarks += m; } else { mainGroups++; mainMarks += m; }
   });
   masterListEl.innerHTML = html;
+  var subtitleEl = document.querySelector("#checklist-section .sub");
+  if(subtitleEl){
+    subtitleEl.textContent = "Mirrors exactly what's on the marking rubric — " + mainGroups + " criteria" +
+      (bonusMarks ? ", plus a " + bonusMarks + "-mark challenge bonus" : "") + ". " + (mainMarks + bonusMarks) + " marks total.";
+  }
   masterListEl.querySelectorAll('input[type="checkbox"]').forEach(function(cb){
     cb.addEventListener("change", function(){
       var row = cb.closest(".check-item"); var id = row.getAttribute("data-id");
@@ -1111,6 +1198,197 @@ function renderGlossary(){
   });
   document.getElementById("gloss-grid").innerHTML = html;
 }
+
+/* ---------- admin ---------- */
+var ADMIN_CODE = "History2026";
+var isAdmin = false;
+
+function decodeEntities(s){
+  var d = document.createElement("div");
+  d.innerHTML = String(s==null?"":s);
+  return d.textContent || "";
+}
+function escAttr(s){ return esc(s).replace(/"/g,"&quot;"); }
+function getMaster(){ return (STATE._config && STATE._config.master) || MASTER; }
+
+var adminFab = document.getElementById("admin-fab");
+var adminLoginOverlay = document.getElementById("admin-login-overlay");
+var adminCodeInput = document.getElementById("admin-code-input");
+var adminLoginStatus = document.getElementById("admin-login-status");
+var adminPanelOverlay = document.getElementById("admin-panel-overlay");
+var adminChecklistStatus = document.getElementById("admin-checklist-status");
+
+adminFab.addEventListener("click", function(){
+  if(isAdmin){ openAdminPanel(); return; }
+  adminCodeInput.value = "";
+  adminLoginStatus.textContent = "";
+  adminLoginOverlay.hidden = false;
+  adminCodeInput.focus();
+});
+document.getElementById("admin-login-cancel").addEventListener("click", function(){ adminLoginOverlay.hidden = true; });
+document.getElementById("admin-login-submit").addEventListener("click", submitAdminCode);
+adminCodeInput.addEventListener("keydown", function(e){ if(e.key === "Enter") submitAdminCode(); });
+function submitAdminCode(){
+  if(adminCodeInput.value === ADMIN_CODE){
+    isAdmin = true;
+    adminLoginOverlay.hidden = true;
+    openAdminPanel();
+  } else {
+    adminLoginStatus.textContent = "That code isn't right — try again.";
+  }
+}
+
+function openAdminPanel(){
+  renderAdminGroups();
+  renderAdminChecklistEditor();
+  adminPanelOverlay.hidden = false;
+}
+document.getElementById("admin-panel-close").addEventListener("click", function(){ adminPanelOverlay.hidden = true; });
+[adminLoginOverlay, adminPanelOverlay].forEach(function(ov){
+  ov.addEventListener("click", function(e){ if(e.target === ov) ov.hidden = true; });
+});
+document.addEventListener("keydown", function(e){
+  if(e.key !== "Escape") return;
+  if(!adminPanelOverlay.hidden) adminPanelOverlay.hidden = true;
+  else if(!adminLoginOverlay.hidden) adminLoginOverlay.hidden = true;
+});
+
+function renderAdminGroups(){
+  var el = document.getElementById("admin-groups-list");
+  var html = "";
+  CLASSES.forEach(function(classId){
+    var groups = groupsForClass(classId);
+    if(!groups.length) return;
+    html += '<div class="admin-class-block"><div class="admin-class-label">Class ' + esc(classId) + '</div>';
+    groups.forEach(function(g){
+      var checks = g.checks || {};
+      var done = Object.keys(checks).filter(function(k){ return checks[k]; }).length;
+      html += '<div class="admin-group-row" data-class="' + esc(classId) + '" data-group="' + esc(g.id) + '">';
+      html += '<div class="admin-group-info"><b>' + esc(g.groupName || g.id) + '</b>';
+      html += '<span>' + esc(g.members || "no members listed") + ' · ' + done + ' / ' + totalMasterItems() + ' ticked</span></div>';
+      html += '<button type="button" class="reset-btn admin-delete-group">Delete</button></div>';
+    });
+    html += '</div>';
+  });
+  el.innerHTML = html || '<div class="status-line">No groups saved yet in any class.</div>';
+  el.querySelectorAll(".admin-delete-group").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      var row = btn.closest(".admin-group-row");
+      var classId = row.getAttribute("data-class"), groupId = row.getAttribute("data-group");
+      var g = STATE[classId].groups[groupId];
+      if(!g) return;
+      if(!confirm('Permanently delete group "' + (g.groupName || groupId) + '" from class ' + classId + '? This cannot be undone.')) return;
+      delete STATE[classId].groups[groupId];
+      if(app.classId === classId && app.groupId === groupId){
+        clearResumePointer();
+        app.groupId = null;
+      }
+      renderAdminGroups();
+      persist(function(ok){
+        if(!ok) showSavePill("Deleted locally — couldn't sync to the saved copy yet.", 3000);
+      });
+    });
+  });
+}
+
+/* ---------- checklist editor (admin) ---------- */
+var adminMasterDraft = null;
+function cloneMaster(){ return JSON.parse(JSON.stringify(getMaster())); }
+
+function renderAdminChecklistEditor(){
+  adminMasterDraft = cloneMaster();
+  drawAdminChecklistEditor();
+  if(adminChecklistStatus) adminChecklistStatus.textContent = "";
+}
+function drawAdminChecklistEditor(){
+  var el = document.getElementById("admin-checklist-editor");
+  var html = "";
+  adminMasterDraft.forEach(function(g, gi){
+    html += '<div class="admin-crit-group" data-gi="' + gi + '">';
+    html += '<div class="admin-crit-head">';
+    html += '<input type="text" class="admin-group-name" value="' + escAttr(decodeEntities(g.group)) + '" data-gi="' + gi + '" placeholder="Criteria group name">';
+    html += '<input type="text" class="admin-group-marks" value="' + escAttr(decodeEntities(g.marks)) + '" data-gi="' + gi + '" placeholder="/6">';
+    html += '<button type="button" class="reset-btn admin-del-group" data-gi="' + gi + '">Remove group</button>';
+    html += '</div>';
+    g.items.forEach(function(it, ii){
+      html += '<div class="admin-item-row" data-gi="' + gi + '" data-ii="' + ii + '">';
+      html += '<textarea rows="1" class="admin-item-text" data-gi="' + gi + '" data-ii="' + ii + '" placeholder="Checklist point…">' + esc(decodeEntities(it.text)) + '</textarea>';
+      html += '<button type="button" class="del admin-del-item" data-gi="' + gi + '" data-ii="' + ii + '" title="Remove point">✕</button>';
+      html += '</div>';
+    });
+    html += '<button type="button" class="add-source-btn admin-add-item" data-gi="' + gi + '">+ Add a checklist point</button>';
+    html += '</div>';
+  });
+  el.innerHTML = html;
+
+  el.querySelectorAll(".admin-group-name").forEach(function(inp){
+    inp.addEventListener("input", function(){ adminMasterDraft[Number(inp.getAttribute("data-gi"))].group = esc(inp.value); });
+  });
+  el.querySelectorAll(".admin-group-marks").forEach(function(inp){
+    inp.addEventListener("input", function(){ adminMasterDraft[Number(inp.getAttribute("data-gi"))].marks = esc(inp.value); });
+  });
+  el.querySelectorAll(".admin-item-text").forEach(function(ta){
+    ta.addEventListener("input", function(){
+      var gi = Number(ta.getAttribute("data-gi")), ii = Number(ta.getAttribute("data-ii"));
+      adminMasterDraft[gi].items[ii].text = esc(ta.value);
+    });
+  });
+  el.querySelectorAll(".admin-del-item").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      var gi = Number(btn.getAttribute("data-gi")), ii = Number(btn.getAttribute("data-ii"));
+      adminMasterDraft[gi].items.splice(ii,1);
+      drawAdminChecklistEditor();
+    });
+  });
+  el.querySelectorAll(".admin-add-item").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      var gi = Number(btn.getAttribute("data-gi"));
+      var newId = "custom-" + Date.now().toString(36) + Math.random().toString(36).slice(2,6);
+      adminMasterDraft[gi].items.push({id:newId, text:""});
+      drawAdminChecklistEditor();
+      var rows = el.querySelectorAll('.admin-item-row[data-gi="'+gi+'"] textarea');
+      if(rows.length) rows[rows.length-1].focus();
+    });
+  });
+  el.querySelectorAll(".admin-del-group").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      var gi = Number(btn.getAttribute("data-gi"));
+      if(!confirm("Remove this whole criteria group and all its points?")) return;
+      adminMasterDraft.splice(gi,1);
+      drawAdminChecklistEditor();
+    });
+  });
+}
+document.getElementById("admin-add-group-btn").addEventListener("click", function(){
+  adminMasterDraft.push({group:"New criteria", marks:"/6", items:[{id:"custom-"+Date.now().toString(36)+Math.random().toString(36).slice(2,6), text:""}]});
+  drawAdminChecklistEditor();
+});
+document.getElementById("admin-save-checklist-btn").addEventListener("click", function(){
+  var cleaned = adminMasterDraft.map(function(g){
+    return {group: g.group, marks: g.marks, bonus: g.bonus, items: g.items.filter(function(it){ return decodeEntities(it.text).trim(); })};
+  }).filter(function(g){ return g.items.length > 0 && decodeEntities(g.group).trim(); });
+  if(!cleaned.length){
+    adminChecklistStatus.textContent = "Add at least one checklist point before saving.";
+    return;
+  }
+  STATE._config = STATE._config || {};
+  STATE._config.master = cleaned;
+  adminChecklistStatus.textContent = "Saving…";
+  if(app.groupId) renderMaster();
+  persist(function(ok){
+    adminChecklistStatus.textContent = ok ? "Checklist updated for everyone." : "Updated locally — couldn't sync to the saved copy yet.";
+  });
+});
+document.getElementById("admin-reset-checklist-btn").addEventListener("click", function(){
+  if(!confirm("Reset the checklist to the original default? Any custom points will be lost.")) return;
+  STATE._config = STATE._config || {};
+  STATE._config.master = null;
+  renderAdminChecklistEditor();
+  if(app.groupId) renderMaster();
+  persist(function(ok){
+    adminChecklistStatus.textContent = ok ? "Checklist reset to default for everyone." : "Reset locally — couldn't sync to the saved copy yet.";
+  });
+});
 
 /* ---------- boot ---------- */
 (function boot(){
