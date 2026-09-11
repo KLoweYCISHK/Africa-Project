@@ -322,7 +322,7 @@ footer{margin-top:44px; padding-top:18px; border-top:1px solid var(--line); colo
 <div class="gate" id="screen-class">
   <div class="eyebrow" style="justify-content:center;">YEAR 9 HISTORY · AFRICA GROUP PROJECT</div>
   <h1>Which class are you in?</h1>
-  <p>Pick your class, then find (or start) your group. Your progress saves to your group automatically and will be here next lesson, even on a different computer.</p>
+  <p id="class-gate-copy">Pick your class, then find (or start) your group. Your progress saves to your group automatically and will be here next lesson, even on a different computer.</p>
   <div class="class-grid" id="class-grid"></div>
 </div>
 
@@ -689,12 +689,44 @@ function totalMasterItems(){ var n=0; getMaster().forEach(function(g){ n+=g.item
 function emptyGroupDoc(){ return {groupName:"", members:"", empire:"", format:"", region:"", checks:{}, bibliography:[], createdAt:"", updatedAt:""}; }
 
 /* ---------- state ---------- */
+/* Two ways this page can save, depending on how it's being served:
+   1. As a published Claude Artifact — window.claude is present, and every
+      save publishes fresh HTML that every viewer sees (true cross-device
+      sync, handled by persist() below via artifactApi.publish()).
+   2. Anywhere else (GitHub Pages, a double-clicked local file, a preview
+      tab) — there is no such runtime, so saves instead go to this
+      browser's own localStorage. That doesn't sync across computers, but
+      it does mean ticked boxes, groups and admin edits survive a reload
+      or closing and reopening the browser on the same device — "keep
+      coming back to it" on the computer they're using. */
+var hasArtifactRuntime = typeof window !== "undefined" && window.claude && typeof window.claude.use === "function";
+var LOCAL_STATE_KEY = "africa-dossier-local-state-v1";
+function saveLocalState(){
+  try{ localStorage.setItem(LOCAL_STATE_KEY, JSON.stringify(STATE)); return true; }catch(e){ return false; }
+}
+function loadLocalState(){
+  try{
+    var raw = localStorage.getItem(LOCAL_STATE_KEY);
+    var parsed = raw ? JSON.parse(raw) : null;
+    return (parsed && typeof parsed === "object") ? parsed : null;
+  }catch(e){ return null; }
+}
+
 var STATE = JSON.parse(document.getElementById("app-state").textContent);
+if(!hasArtifactRuntime){
+  var savedLocally = loadLocalState();
+  if(savedLocally) STATE = savedLocally;
+}
 CLASSES.forEach(function(c){ if(!STATE[c]) STATE[c] = {groups:{}}; if(!STATE[c].groups) STATE[c].groups = {}; });
 
 var artifactApi = null;
-if(typeof window !== "undefined" && window.claude && typeof window.claude.use === "function"){
+if(hasArtifactRuntime){
   window.claude.use("artifact").then(function(a){ artifactApi = a; }).catch(function(){ artifactApi = null; });
+} else {
+  var gateCopyEl = document.getElementById("class-gate-copy");
+  if(gateCopyEl){
+    gateCopyEl.textContent = "Pick your class, then find (or start) your group. Your progress saves automatically in this browser and will be here next lesson on this same computer.";
+  }
 }
 
 var app = {
@@ -709,9 +741,11 @@ var app = {
 
 /* ---------- resume-across-reload helpers ----------
    Publishing an artifact reloads the page (that's how everyone else's
-   view sees the new data). sessionStorage is the only thing that
-   survives that reload, so: (1) remember which group is open, so a
-   reload lands the student back on their checklist instead of the
+   view sees the new data), and closing/reopening the browser on a
+   GitHub-Pages-style local save works the same way from the student's
+   point of view. localStorage survives both, so: (1) remember which
+   group is open, so coming back — even days later on the same computer —
+   lands the student straight back on their checklist instead of the
    class picker, and (2) keep a copy of whatever hasn't been confirmed
    saved yet, so a save that silently loses a race (a "conflict") never
    loses a ticked box — it's picked back up and retried automatically. */
@@ -719,16 +753,16 @@ var RESUME_KEY = "africa-dossier-resume";
 function saveResumePointer(){
   try{
     if(app.classId && app.groupId){
-      sessionStorage.setItem(RESUME_KEY, JSON.stringify({classId: app.classId, groupId: app.groupId}));
+      localStorage.setItem(RESUME_KEY, JSON.stringify({classId: app.classId, groupId: app.groupId}));
     }
   }catch(e){}
 }
 function clearResumePointer(){
-  try{ sessionStorage.removeItem(RESUME_KEY); }catch(e){}
+  try{ localStorage.removeItem(RESUME_KEY); }catch(e){}
 }
 function loadResumePointer(){
   try{
-    var raw = sessionStorage.getItem(RESUME_KEY);
+    var raw = localStorage.getItem(RESUME_KEY);
     return raw ? JSON.parse(raw) : null;
   }catch(e){ return null; }
 }
@@ -961,8 +995,26 @@ function showSavePill(text, ms){
 
 function persist(cb){
   if(!artifactApi){
-    if(cb) cb(false);
-    showSavePill("Saving isn't available in this preview — open the published page to save.", 2200);
+    if(hasArtifactRuntime){
+      // The Artifacts runtime exists but hasn't finished connecting yet
+      // (or failed to) — nothing to fall back to but a short wait/retry.
+      if(cb) cb(false);
+      showSavePill("Saving isn't available right now — try again in a moment.", 2200);
+      return;
+    }
+    // No Artifacts runtime at all (GitHub Pages, a downloaded copy, a
+    // plain preview) — save to this browser instead, so groups and
+    // ticked boxes still survive a reload or reopening the browser later
+    // on the same computer.
+    var ok = saveLocalState();
+    if(ok){
+      app.retriedUpstream = false;
+      showSavePill("Saved on this device", 1400);
+      if(cb) cb(true);
+    } else {
+      showSavePill("Couldn't save — this browser may be blocking local storage.", 3200);
+      if(cb) cb(false);
+    }
     return;
   }
   app.saving = true;
