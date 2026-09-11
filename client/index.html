@@ -315,11 +315,6 @@
     <div class="new-group-box">
       <h3>Start a new group</h3>
       <div class="field">
-        <label for="new-groupname">Group name</label>
-        <input id="new-groupname" type="text" placeholder="e.g. Group 3, or Team Nile" autocomplete="off">
-        <div class="hint">Use the same name every lesson so you can find your group again.</div>
-      </div>
-      <div class="field">
         <label for="new-members">Group members</label>
         <input id="new-members" type="text" placeholder="e.g. Amara, Ben, Chloe, Divya" autocomplete="off">
       </div>
@@ -662,14 +657,13 @@
     formatPickSetup.appendChild(b);
   });
 
-  var newNameEl = document.getElementById("new-groupname");
   var newMembersEl = document.getElementById("new-members");
   var createBtn = document.getElementById("create-group-btn");
   var newGroupStatus = document.getElementById("new-group-status");
-  [newNameEl, newMembersEl].forEach(function(el){ el.addEventListener("input", validateNewGroupForm); });
+  newMembersEl.addEventListener("input", validateNewGroupForm);
 
   function validateNewGroupForm(){
-    createBtn.disabled = !(slugify(newNameEl.value) && newMembersEl.value.trim() && pickedEmpire && pickedFormat);
+    createBtn.disabled = !(slugify(newMembersEl.value) && pickedEmpire && pickedFormat);
   }
 
   function groupListCollection(classId){
@@ -690,8 +684,8 @@
         var checks = data.checks || {};
         var done = Object.keys(checks).filter(function(k){ return /^m\d+$/.test(k) && checks[k]; }).length;
         html += '<button type="button" class="group-card" data-id="' + esc(d.id) + '" style="--e-color:' + (e ? e.color : "#a3761f") + '">';
-        html += '<span class="swatch"></span><span class="meta"><span class="g-name">' + esc(data.groupName || d.id) + '</span>';
-        html += '<span class="g-sub">' + esc(data.members || "") + (e ? " · " + e.name : "") + (fmt ? " · " + fmt.name : "") + '</span></span>';
+        html += '<span class="swatch"></span><span class="meta"><span class="g-name">' + esc(data.members || d.id) + '</span>';
+        html += '<span class="g-sub">' + (e ? e.name : "") + (fmt ? " · " + fmt.name : "") + '</span></span>';
         html += '<span class="g-progress">' + done + '/' + totalMasterItems() + '</span></button>';
       });
       listEl.innerHTML = html;
@@ -702,8 +696,8 @@
   }
 
   createBtn.addEventListener("click", function(){
-    var groupId = slugify(newNameEl.value);
-    if(!groupId || !newMembersEl.value.trim() || !pickedEmpire || !pickedFormat) return;
+    var groupId = slugify(newMembersEl.value);
+    if(!groupId || !pickedEmpire || !pickedFormat) return;
     if(!app.db){
       newGroupStatus.textContent = "Saving isn’t available in this view right now — try reopening the page from Claude.";
       return;
@@ -712,7 +706,6 @@
     newGroupStatus.textContent = "Setting up your group…";
     var ref = groupListCollection(app.classId).doc(groupId);
     var body = {
-      groupName: newNameEl.value.trim(),
       members: newMembersEl.value.trim(),
       empire: pickedEmpire,
       format: pickedFormat,
@@ -754,7 +747,7 @@
 
   function enterMain(){
     document.getElementById("who-class").textContent = app.classId;
-    document.getElementById("who-group").textContent = app.doc.groupName || app.groupId;
+    document.getElementById("who-group").textContent = app.doc.members || app.groupId;
     var e = empireById(app.doc.empire) || EMPIRES[0];
     document.getElementById("who-empire").textContent = e.name;
     var f0 = formatById(app.doc.format);
