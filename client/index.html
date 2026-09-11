@@ -1,26 +1,1009 @@
 <!doctype html>
 <html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scramble for Africa Dossier</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper: #eef0e7;
+    --surface: #ffffff;
+    --surface-2: #e3e7da;
+    --ink: #172422;
+    --ink-soft: #4b5850;
+    --ink-faint: #7c8981;
+    --line: rgba(23,36,34,0.15);
+    --line-strong: rgba(23,36,34,0.28);
+    --accent: #a3761f;
+    --accent-ink: #7a5a17;
+    --accent-wash: #f3e6c8;
+    --good: #2f7a52;
+    --good-bg: #e2efe3;
+    --bad: #9c4130;
+    --bad-bg: #f6e6e0;
+    --shadow: 0 1px 2px rgba(23,36,34,0.06), 0 8px 20px -12px rgba(23,36,34,0.22);
+    --radius-s: 6px;
+    --radius-m: 10px;
+    --radius-l: 16px;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper: #121c19; --surface: #182521; --surface-2: #1f2e29;
+      --ink: #eef1ea; --ink-soft: #b7c3ba; --ink-faint: #869089;
+      --line: rgba(238,241,234,0.14); --line-strong: rgba(238,241,234,0.26);
+      --accent: #dcae55; --accent-ink: #eec37a; --accent-wash: rgba(220,174,85,0.16);
+      --good: #6fbf93; --good-bg: rgba(111,191,147,0.14);
+      --bad: #e0836f; --bad-bg: rgba(224,131,111,0.14);
+      --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 10px 24px -14px rgba(0,0,0,0.6);
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper: #121c19; --surface: #182521; --surface-2: #1f2e29;
+    --ink: #eef1ea; --ink-soft: #b7c3ba; --ink-faint: #869089;
+    --line: rgba(238,241,234,0.14); --line-strong: rgba(238,241,234,0.26);
+    --accent: #dcae55; --accent-ink: #eec37a; --accent-wash: rgba(220,174,85,0.16);
+    --good: #6fbf93; --good-bg: rgba(111,191,147,0.14);
+    --bad: #e0836f; --bad-bg: rgba(224,131,111,0.14);
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 10px 24px -14px rgba(0,0,0,0.6);
+    color-scheme: dark;
+  }
 
-  <head>
-    <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1" />
-    <title>Scramble for Africa Dossier</title>    
-    <!-- THIS IS THE START OF A COMMENT BLOCK, BLOCK TO BE DELETED: Google Fonts here, example:
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    THIS IS THE END OF A COMMENT BLOCK, BLOCK TO BE DELETED -->
-  </head>
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:"Public Sans", ui-sans-serif, system-ui, sans-serif;
+    padding-inline:20px; padding-block:32px 64px; line-height:1.5;
+  }
+  @media (prefers-reduced-motion: reduce){ *{animation-duration:0.001ms !important; transition-duration:0.001ms !important;} }
+  .wrap{max-width:1040px; margin-inline:auto;}
+  h1,h2,h3{font-family:"Fraunces", Georgia, serif; text-wrap:balance; margin:0; font-weight:600;}
+  ::selection{background:var(--accent-wash);}
+  :focus-visible{outline:2.5px solid var(--accent); outline-offset:2px; border-radius:4px;}
+  [hidden]{display:none !important;}
+  button{font:inherit;}
 
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-    <script
-      defer
-      src="%VITE_ANALYTICS_ENDPOINT%/umami"
-      data-website-id="%VITE_ANALYTICS_WEBSITE_ID%"></script>
-  </body>
+  .eyebrow{
+    font-family:"IBM Plex Mono", ui-monospace, monospace; font-size:0.72rem; letter-spacing:0.09em;
+    text-transform:uppercase; color:var(--ink-faint); display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:14px;
+  }
+  .eyebrow .dot{opacity:0.5;}
 
+  /* ---------- gate screens (class / group) ---------- */
+  .gate{max-width:640px; margin:6vh auto 0; text-align:center;}
+  .gate h1{font-size:clamp(1.7rem, 1.3rem + 1.8vw, 2.3rem); margin-bottom:10px;}
+  .gate p{color:var(--ink-soft); max-width:52ch; margin:0 auto 30px;}
+  .class-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:12px;}
+  @media (max-width:480px){ .class-grid{grid-template-columns:repeat(2,1fr);} }
+  .class-btn{
+    font-family:"Fraunces",serif; font-weight:600; font-size:1.3rem;
+    background:var(--surface); border:1.5px solid var(--line-strong); border-radius:var(--radius-l);
+    padding:22px 10px; cursor:pointer; box-shadow:var(--shadow); color:var(--ink);
+  }
+  .class-btn:hover{border-color:var(--accent); color:var(--accent-ink);}
+
+  .gate-back{
+    font-family:"IBM Plex Mono",monospace; font-size:0.75rem; background:none; border:none;
+    color:var(--ink-faint); cursor:pointer; margin-bottom:22px; padding:4px 0;
+  }
+  .gate-back:hover{color:var(--accent-ink);}
+  .gate-back::before{content:"← "; }
+
+  .group-list{display:flex; flex-direction:column; gap:10px; margin-bottom:30px; text-align:left;}
+  .group-card{
+    display:flex; align-items:center; gap:14px; background:var(--surface); border:1px solid var(--line);
+    border-radius:var(--radius-m); padding:13px 16px; box-shadow:var(--shadow); cursor:pointer; text-align:left; width:100%;
+  }
+  .group-card:hover{border-color:var(--e-color, var(--accent));}
+  .group-card .swatch{width:10px; height:34px; border-radius:4px; background:var(--e-color); flex-shrink:0;}
+  .group-card .meta{flex:1; min-width:0;}
+  .group-card .g-name{font-weight:700; font-size:0.97rem;}
+  .group-card .g-sub{font-size:0.82rem; color:var(--ink-soft); margin-top:2px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+  .group-card .g-progress{font-family:"IBM Plex Mono",monospace; font-size:0.78rem; color:var(--ink-faint); white-space:nowrap;}
+
+  .new-group-box{
+    background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-l);
+    padding:22px; box-shadow:var(--shadow); text-align:left;
+  }
+  .new-group-box h3{font-size:1.05rem; margin-bottom:14px; text-align:center;}
+  .field{margin-bottom:14px;}
+  .field label{display:block; font-family:"IBM Plex Mono",monospace; font-size:0.66rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--ink-faint); margin-bottom:6px;}
+  .field .hint{font-size:0.78rem; color:var(--ink-faint); margin-top:5px; font-family:"Public Sans",sans-serif; text-transform:none; letter-spacing:0;}
+  .field input, .field select, .field textarea{
+    width:100%; font:inherit; font-size:0.94rem; padding:9px 11px; border-radius:var(--radius-s);
+    border:1px solid var(--line-strong); background:var(--paper); color:var(--ink);
+  }
+  .empire-pick{display:grid; grid-template-columns:repeat(3,1fr); gap:8px;}
+  @media (max-width:520px){ .empire-pick{grid-template-columns:repeat(2,1fr);} }
+  .empire-opt{
+    border:1.5px solid var(--line-strong); border-radius:var(--radius-s); padding:9px 6px; text-align:center;
+    background:var(--paper); cursor:pointer; font-size:0.85rem; font-weight:600;
+  }
+  .empire-opt[aria-pressed="true"]{background:var(--e-color); border-color:var(--e-color); color:#fff;}
+  .format-pick{display:grid; grid-template-columns:repeat(3,1fr); gap:8px;}
+  @media (max-width:520px){ .format-pick{grid-template-columns:1fr;} }
+  .format-opt{
+    border:1.5px solid var(--line-strong); border-radius:var(--radius-s); padding:10px 8px; text-align:center;
+    background:var(--paper); cursor:pointer; font-size:0.85rem; font-weight:600;
+  }
+  .format-opt[aria-pressed="true"]{background:var(--accent); border-color:var(--accent); color:#20180a;}
+  .primary-btn{
+    width:100%; margin-top:6px; font-family:"Fraunces",serif; font-weight:600; font-size:1.02rem;
+    background:var(--accent); color:#20180a; border:none; border-radius:var(--radius-s); padding:12px; cursor:pointer;
+  }
+  .primary-btn:disabled{opacity:0.45; cursor:not-allowed;}
+  .primary-btn:not(:disabled):hover{filter:brightness(1.07);}
+  .status-line{font-size:0.8rem; color:var(--ink-faint); margin-top:10px; min-height:1.1em;}
+
+  /* ---------- main app ---------- */
+  .masthead{padding-block:6px 22px; border-bottom:1px solid var(--line); margin-bottom:26px;}
+  .masthead h1{font-size:clamp(1.7rem, 1.3rem + 1.6vw, 2.3rem); letter-spacing:-0.01em;}
+  .masthead p{max-width:62ch; color:var(--ink-soft); font-size:1rem; margin-top:10px;}
+  .whoami{
+    display:flex; flex-wrap:wrap; gap:8px 16px; align-items:center; margin-bottom:10px;
+    font-family:"IBM Plex Mono",monospace; font-size:0.72rem; color:var(--ink-faint); text-transform:uppercase; letter-spacing:0.06em;
+  }
+  .whoami b{color:var(--ink); font-weight:600; text-transform:none; font-family:"Public Sans",sans-serif; letter-spacing:0;}
+  .whoami .link-btn{
+    background:none; border:none; color:var(--accent-ink); font-family:"IBM Plex Mono",monospace; font-size:0.72rem;
+    text-transform:uppercase; letter-spacing:0.06em; cursor:pointer; padding:0; text-decoration:underline;
+  }
+
+  .infobar{
+    display:grid; grid-template-columns:1.3fr 1fr auto; gap:14px; align-items:end;
+    background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-l);
+    padding:16px 18px; box-shadow:var(--shadow); margin-bottom:34px;
+  }
+  @media (max-width:700px){ .infobar{grid-template-columns:1fr;} }
+  .infobar .field{margin-bottom:0;}
+  .progress-field{display:flex; flex-direction:column; justify-content:center; min-width:150px;}
+  .progress-field .num{font-family:"Fraunces",serif; font-weight:600; font-size:1.5rem; font-variant-numeric:tabular-nums;}
+  .progress-field .cap{font-family:"IBM Plex Mono",monospace; font-size:0.66rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--ink-faint);}
+  .bar{height:6px; border-radius:4px; background:var(--surface-2); overflow:hidden; margin-top:6px;}
+  .bar > span{display:block; height:100%; background:var(--accent); border-radius:4px; transition:width .35s ease;}
+
+  .section-head{display:flex; align-items:baseline; justify-content:space-between; gap:12px; margin-bottom:16px; flex-wrap:wrap;}
+  .section-head h2{font-size:1.5rem;}
+  .section-head .sub{color:var(--ink-soft); font-size:0.92rem; max-width:60ch;}
+  section{margin-bottom:46px;}
+  .reset-btn{
+    font-family:"IBM Plex Mono",monospace; font-size:0.72rem; letter-spacing:0.03em; background:none;
+    border:1px solid var(--line-strong); color:var(--ink-soft); padding:6px 11px; border-radius:20px; cursor:pointer;
+  }
+  .reset-btn:hover{border-color:var(--accent); color:var(--accent-ink);}
+
+  .crit{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-l); padding:18px 20px; margin-bottom:14px; box-shadow:var(--shadow);}
+  .crit-head{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:12px;}
+  .crit-head h3{font-size:1.05rem;}
+  .marks-badge{
+    font-family:"IBM Plex Mono",monospace; font-size:0.7rem; letter-spacing:0.04em; background:var(--accent-wash);
+    color:var(--accent-ink); padding:3px 9px; border-radius:20px; white-space:nowrap;
+    border:1px solid color-mix(in srgb, var(--accent) 45%, transparent);
+  }
+  .crit.bonus .marks-badge{background:var(--good-bg); color:var(--good); border-color:color-mix(in srgb, var(--good) 45%, transparent);}
+  .check-item{display:flex; align-items:flex-start; gap:10px; padding-block:7px; border-top:1px solid var(--line);}
+  .check-item:first-of-type{border-top:none;}
+  .check-item input[type="checkbox"]{
+    appearance:none; width:19px; height:19px; min-width:19px; margin-top:2px; border-radius:5px;
+    border:1.6px solid var(--line-strong); background:var(--paper); display:grid; place-content:center; cursor:pointer;
+  }
+  .check-item input[type="checkbox"]::before{
+    content:""; width:10px; height:10px; clip-path:polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 45% 62%);
+    background:var(--surface); transform:scale(0); transition:transform .12s ease;
+  }
+  .check-item input[type="checkbox"]:checked{background:var(--accent); border-color:var(--accent);}
+  .check-item input[type="checkbox"]:checked::before{transform:scale(1);}
+  .check-item label{cursor:pointer; font-size:0.95rem;}
+  .check-item.checked label{color:var(--ink-soft); text-decoration:line-through; text-decoration-color:var(--line-strong);}
+
+  .format-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:16px;}
+  @media (max-width:820px){ .format-grid{grid-template-columns:1fr;} }
+  .format-card{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-l); padding:20px; box-shadow:var(--shadow); display:flex; flex-direction:column;}
+  .format-card .f-kicker{font-family:"IBM Plex Mono",monospace; font-size:0.68rem; text-transform:uppercase; letter-spacing:0.09em; color:var(--accent-ink); margin-bottom:6px;}
+  .format-card h3{font-size:1.2rem; margin-bottom:8px;}
+  .format-card .f-desc{color:var(--ink-soft); font-size:0.9rem; margin-bottom:14px;}
+  .format-card .check-item{padding-block:6px;}
+  .format-card .check-item label{font-size:0.87rem;}
+  .format-chosen{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-l); padding:22px 24px; box-shadow:var(--shadow);}
+  .format-chosen-head{display:flex; align-items:flex-start; justify-content:space-between; gap:14px; margin-bottom:6px;}
+  .format-chosen .f-kicker{font-family:"IBM Plex Mono",monospace; font-size:0.68rem; text-transform:uppercase; letter-spacing:0.09em; color:var(--accent-ink); margin-bottom:6px;}
+  .format-chosen h3{font-size:1.35rem; margin-bottom:6px;}
+  .format-chosen .f-desc{color:var(--ink-soft); font-size:0.92rem; margin-bottom:16px; max-width:60ch;}
+  .tips-grid{display:grid; grid-template-columns:1fr 1fr; gap:0 24px;}
+  @media (max-width:640px){ .tips-grid{grid-template-columns:1fr;} }
+  .format-choose-box{background:var(--surface); border:1.5px dashed var(--line-strong); border-radius:var(--radius-l); padding:22px 24px; text-align:center;}
+  .format-choose-box p{color:var(--ink-soft); font-size:0.92rem; margin:0 0 14px;}
+  .format-choose-box .format-pick{max-width:460px; margin:0 auto;}
+
+  .dossier{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-l); box-shadow:var(--shadow); overflow:hidden;}
+  .dossier-head{padding:20px 24px; border-bottom:1px solid var(--line); background:color-mix(in srgb, var(--e-color) 9%, var(--surface));}
+  .dossier-head .tag{font-family:"IBM Plex Mono",monospace; font-size:0.7rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--e-color);}
+  .dossier-head h3{font-size:1.45rem; margin-top:4px;}
+  .dossier-head .example{color:var(--ink-soft); font-size:0.88rem; margin-top:6px; font-style:italic;}
+  .dossier-body{padding:22px 24px 26px; display:flex; flex-direction:column; gap:26px;}
+  .block-label{font-family:"IBM Plex Mono",monospace; font-size:0.7rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--ink-faint); margin-bottom:10px;}
+  .note{font-size:0.83rem; color:var(--ink-soft); margin-top:-4px; margin-bottom:2px;}
+
+  .chip-row{display:flex; flex-wrap:wrap; gap:8px;}
+  .chip{font-size:0.86rem; padding:6px 13px; border-radius:20px; border:1.4px solid var(--line-strong); background:var(--paper); color:var(--ink-soft); cursor:pointer;}
+  .chip:hover{border-color:var(--e-color); color:var(--ink);}
+  .chip[aria-pressed="true"]{background:var(--e-color); border-color:var(--e-color); color:#fff;}
+
+  .angles{display:grid; grid-template-columns:repeat(3,1fr); gap:14px;}
+  @media (max-width:780px){ .angles{grid-template-columns:1fr;} }
+  .angle{background:var(--paper); border:1px solid var(--line); border-radius:var(--radius-m); padding:13px 15px;}
+  .angle h4{font-family:"Public Sans",sans-serif; font-weight:700; font-size:0.86rem; margin:0 0 8px; color:var(--e-color);}
+  .angle ul{margin:0; padding-left:18px; font-size:0.86rem; color:var(--ink-soft); display:flex; flex-direction:column; gap:6px;}
+
+  .impacts{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+  @media (max-width:620px){ .impacts{grid-template-columns:1fr;} }
+  .impact-col{border-radius:var(--radius-m); padding:14px 16px;}
+  .impact-col.neg{background:var(--bad-bg);}
+  .impact-col.pos{background:var(--good-bg);}
+  .impact-col h4{font-size:0.85rem; margin:0 0 8px;}
+  .impact-col.neg h4{color:var(--bad);}
+  .impact-col.pos h4{color:var(--good);}
+  .impact-col ul{margin:0; padding-left:18px; font-size:0.87rem; display:flex; flex-direction:column; gap:7px; color:var(--ink);}
+  .caution{font-size:0.85rem; font-style:italic; margin-top:9px; padding-top:9px; border-top:1px dashed var(--line-strong); color:var(--ink-soft);}
+
+  .two-col{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+  @media (max-width:700px){ .two-col{grid-template-columns:1fr;} }
+  .list-card{background:var(--paper); border:1px solid var(--line); border-radius:var(--radius-m); padding:14px 16px;}
+  .list-card h4{font-size:0.85rem; margin:0 0 8px; color:var(--e-color);}
+  .list-card ul{margin:0; padding-left:18px; font-size:0.87rem; color:var(--ink-soft); display:flex; flex-direction:column; gap:6px;}
+
+  /* ---------- bibliography ---------- */
+  .biblio-list{display:flex; flex-direction:column; gap:10px; margin-bottom:14px;}
+  .biblio-row{display:flex; gap:8px; align-items:flex-start; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-m); padding:10px 12px; box-shadow:var(--shadow);}
+  .biblio-row textarea{
+    flex:1; resize:vertical; min-height:44px; font:inherit; font-size:0.88rem; border:none; background:transparent; color:var(--ink); padding:2px;
+  }
+  .biblio-row .num{font-family:"IBM Plex Mono",monospace; font-size:0.78rem; color:var(--ink-faint); padding-top:6px; min-width:20px;}
+  .biblio-row .del{
+    background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:1.1rem; line-height:1; padding:4px 6px; border-radius:6px;
+  }
+  .biblio-row .del:hover{color:var(--bad); background:var(--bad-bg);}
+  .add-source-btn{
+    font-family:"IBM Plex Mono",monospace; font-size:0.8rem; background:var(--surface); border:1.4px dashed var(--line-strong);
+    color:var(--ink-soft); padding:10px; border-radius:var(--radius-m); cursor:pointer; width:100%;
+  }
+  .add-source-btn:hover{border-color:var(--accent); color:var(--accent-ink);}
+
+  details{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-l); box-shadow:var(--shadow); padding:4px 20px;}
+  summary{cursor:pointer; padding-block:14px; font-family:"Fraunces",serif; font-weight:600; font-size:1.1rem; list-style:none; display:flex; align-items:center; justify-content:space-between;}
+  summary::-webkit-details-marker{display:none;}
+  summary::after{content:"+"; font-family:"IBM Plex Mono",monospace; font-size:1.2rem; color:var(--ink-faint);}
+  details[open] summary::after{content:"–";}
+  .gloss-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:0 24px; padding-bottom:16px;}
+  @media (max-width:600px){ .gloss-grid{grid-template-columns:1fr;} }
+  .gloss-row{display:flex; justify-content:space-between; gap:10px; padding-block:8px; border-top:1px solid var(--line); font-size:0.88rem;}
+  .gloss-row:first-child, .gloss-grid > .gloss-row:nth-child(2){border-top:none;}
+  .gloss-row .zh{color:var(--ink-soft); font-family:"Public Sans",sans-serif;}
+
+  footer{margin-top:44px; padding-top:18px; border-top:1px solid var(--line); color:var(--ink-faint); font-size:0.82rem;}
+  .save-pill{
+    position:fixed; bottom:16px; right:16px; background:var(--surface); border:1px solid var(--line); box-shadow:var(--shadow);
+    border-radius:20px; padding:7px 14px; font-family:"IBM Plex Mono",monospace; font-size:0.74rem; color:var(--ink-soft);
+    opacity:0; transition:opacity .25s ease; pointer-events:none;
+  }
+  .save-pill.show{opacity:1;}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <!-- SCREEN 1: choose class -->
+  <div class="gate" id="screen-class">
+    <div class="eyebrow" style="justify-content:center;">YEAR 9 HISTORY · AFRICA GROUP PROJECT</div>
+    <h1>Which class are you in?</h1>
+    <p>Pick your class, then set up (or return to) your group. Your progress is saved automatically and will be here next lesson, even on a different computer.</p>
+    <div class="class-grid" id="class-grid"></div>
+  </div>
+
+  <!-- SCREEN 2: choose / resume group -->
+  <div class="gate" id="screen-group" hidden>
+    <button class="gate-back" id="back-to-class" type="button">Change class</button>
+    <div class="eyebrow" style="justify-content:center;">CLASS <span id="group-class-label"></span></div>
+    <h1>Find or start your group</h1>
+    <p>Already set up? Tap your group below to carry on. First time? Fill in the form underneath.</p>
+    <div class="group-list" id="group-list"></div>
+    <div class="new-group-box">
+      <h3>Start a new group</h3>
+      <div class="field">
+        <label for="new-groupname">Group name</label>
+        <input id="new-groupname" type="text" placeholder="e.g. Group 3, or Team Nile" autocomplete="off">
+        <div class="hint">Use the same name every lesson so you can find your group again.</div>
+      </div>
+      <div class="field">
+        <label for="new-members">Group members</label>
+        <input id="new-members" type="text" placeholder="e.g. Amara, Ben, Chloe, Divya" autocomplete="off">
+      </div>
+      <div class="field">
+        <label>Our empire</label>
+        <div class="empire-pick" id="empire-pick"></div>
+      </div>
+      <div class="field">
+        <label>Our format</label>
+        <div class="format-pick" id="format-pick-setup"></div>
+      </div>
+      <button class="primary-btn" id="create-group-btn" type="button" disabled>Start working</button>
+      <div class="status-line" id="new-group-status"></div>
+    </div>
+  </div>
+
+  <!-- SCREEN 3: main app -->
+  <div id="screen-main" hidden>
+    <div class="whoami">
+      <span>Class <b id="who-class"></b></span>
+      <span>Group <b id="who-group"></b></span>
+      <span>Empire <b id="who-empire"></b></span>
+      <span>Format <b id="who-format"></b></span>
+      <button class="link-btn" id="switch-group-btn" type="button">switch group</button>
+    </div>
+
+    <div class="masthead">
+      <div class="eyebrow">
+        <span>Berlin Conference, 15 Nov 1884 – 26 Feb 1885</span><span class="dot">·</span>
+        <span>13 nations, 0 Africans present</span>
+      </div>
+      <h1>How did European imperialism affect Africa?</h1>
+      <p>Research your region, weigh the costs against any benefits, then present your findings as a presentation, poster or video. Everything below is a <strong>question to investigate</strong>, not an answer — that part is your job. Tick things off as you go; your group's progress saves automatically.</p>
+    </div>
+
+    <div class="infobar">
+      <div class="field">
+        <label for="f-members">Group members</label>
+        <input id="f-members" type="text">
+      </div>
+      <div class="field">
+        <label for="f-region">Our region</label>
+        <input id="f-region" type="text" placeholder="Pick a region below ↓">
+      </div>
+      <div class="progress-field">
+        <span class="num" id="progress-num">0 / 11</span>
+        <span class="cap">boxes ticked</span>
+        <div class="bar"><span id="progress-bar" style="width:0%"></span></div>
+      </div>
+    </div>
+
+    <section id="checklist-section">
+      <div class="section-head">
+        <div>
+          <h2>Must-have checklist</h2>
+          <div class="sub">Mirrors exactly what's on the marking rubric — 5 criteria out of 6 marks each, plus a 2-mark challenge bonus. 32 marks total.</div>
+        </div>
+        <button class="reset-btn" id="reset-checks" type="button">Clear my ticks</button>
+      </div>
+      <div id="master-list"></div>
+    </section>
+
+    <section id="format-section">
+      <div class="section-head">
+        <div>
+          <h2>Make it your own</h2>
+          <div class="sub" id="format-section-sub">Same content, three different ways to bring it to life.</div>
+        </div>
+      </div>
+      <div id="format-grid"></div>
+    </section>
+
+    <section id="empire-section">
+      <div class="section-head">
+        <div>
+          <h2>Your research questions</h2>
+          <div class="sub" id="dossier-subtitle"></div>
+        </div>
+      </div>
+      <div id="dossier-panel"></div>
+    </section>
+
+    <section id="biblio-section">
+      <div class="section-head">
+        <div>
+          <h2>Bibliography</h2>
+          <div class="sub">Every source you use goes here — websites, books, articles, images, videos, primary sources. Include the author/organisation, title, and a link or publication details.</div>
+        </div>
+      </div>
+      <div class="biblio-list" id="biblio-list"></div>
+      <button class="add-source-btn" id="add-source-btn" type="button">+ Add a source</button>
+    </section>
+
+    <section id="glossary-section">
+      <details id="glossary-details">
+        <summary>Key vocabulary <span style="font-family:'Public Sans',sans-serif; font-weight:400; font-size:0.8rem; color:var(--ink-faint); margin-left:4px;">— English / 中文</span></summary>
+        <div class="gloss-grid" id="gloss-grid"></div>
+      </details>
+    </section>
+
+    <footer>Before you present: every box in the must-have checklist above should be ticked. If a positive-impact box is hard to tick honestly, say so on stage — that's a stronger answer than inventing one.</footer>
+  </div>
+
+  <div class="save-pill" id="save-pill">Saved</div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var CLASSES = ["9.1","9.2","9.3","9.4","9.5","9.6"];
+
+  var EMPIRES = [
+    {
+      id:"britain", name:"Britain", color:"#8c3f35",
+      example:"Britain in Egypt & Sudan",
+      regions:["Egypt & Sudan","Nigeria","Gold Coast (modern Ghana)","Kenya (British East Africa)","Uganda","Rhodesia (modern Zimbabwe/Zambia)","South Africa"],
+      angles:{
+        political:["Did Britain rule your region indirectly through local chiefs, or through direct settler rule — which, and why?","What happened to existing kingdoms and leaders there (e.g. the Zulu Kingdom, the Asante, the Mahdist state in Sudan)?","Did conflict break out because of British rule or settlement (e.g. the Anglo-Zulu War, the Anglo-Boer Wars, the Mahdist War)? What caused it?"],
+        economic:["What resources did Britain extract from your region — gold, diamonds, cocoa, cotton, palm oil, tea?","Who did the railways and ports in your region actually serve?","Were Africans forced into paid labour — through taxation, or by losing land to settler farms?"],
+        social:["How did missionary schools and English-language education change society in your region?","What happened to traditional leadership, law and land ownership?","Did racial segregation develop in your region — especially relevant in South Africa? What form did it take?"]
+      },
+      negative:["Was land seized for white settler farms in your region (relevant especially to Kenya, Rhodesia, South Africa)? What evidence can you find?","How did Britain respond to resistance and rebellion in your region — how severe was it?","Did racial segregation or unequal rights develop? In what form?","Did your region's African kingdom(s) lose independence? What happened to their leaders?"],
+      positive:["Were railways, ports or roads built in your region — and who actually benefited from them?","Did missionaries introduce schools or hospitals? Who had access to them?","Did Britain introduce new legal or administrative systems? What replaced the old ones?","Did English become a shared language across the region — what effect did that have?"],
+      caution:null,
+      sources:["Speeches or writings by colonial figures (e.g. Cecil Rhodes)","Colonial office reports or newspaper articles from the time","Photographs of colonial administration or settlements","Petitions, letters or accounts written by Africans under British rule"],
+      legacy:["Is English still an official or administrative language in your region today?","Is your region part of the Commonwealth today — what does that involve?","Do modern borders in your region group together peoples who were once rivals (e.g. Nigeria)? What tension has this caused?","Is land ownership inequality still debated in your region (relevant to Kenya and South Africa)?","If researching South Africa: what is the legacy of apartheid today?"]
+    },
+    {
+      id:"france", name:"France", color:"#33517a",
+      example:"France in Senegal",
+      regions:["Senegal","Ivory Coast","Mali","Guinea","Madagascar","Algeria","Chad / French Equatorial Africa"],
+      angles:{
+        political:["How did France's policy of “assimilation” differ from Britain's indirect rule?","African leaders were often replaced by French administrators — who actually held citizenship rights?","How were African men conscripted as soldiers for France (the tirailleurs sénégalais) during the World Wars?"],
+        economic:["What forced-labour systems did France use in your region, and what did they build (e.g. the Congo-Ocean Railway)?","What cash crops were African farmers forced to grow (e.g. peanuts in Senegal, cocoa/coffee in Ivory Coast)?","How did taxation push Africans into the colonial economy?"],
+        social:["How did the assimilation policy affect local language, education and culture?","Who made up the small “évolué” class, and what rights did they gain?","What role did Catholic missionaries play in your region?"]
+      },
+      negative:["What forms did forced labour (corvée) take, and what abuses occurred on infrastructure projects?","How heavy was conscription of African soldiers into French wars?","Were local languages and traditions suppressed — how?","How did France respond to resistance movements?"],
+      positive:["Were railways and roads built across your region — who actually used them?","Was a French-language education system introduced — who had access?","Did urban development occur in colonial capitals (e.g. Dakar)? What did it involve?","Did any infrastructure get inherited by the later independent state?"],
+      caution:null,
+      sources:["French colonial administration reports","Photographs or accounts of tirailleurs sénégalais soldiers","Writings by African intellectuals reflecting on colonial rule","Newspaper or government records from the period"],
+      legacy:["Is French still an official language in your region today?","Does your region use the CFA Franc — a currency historically tied to the French treasury? What does that mean today?","Are there still close political or economic ties with France?","Do modern borders combine many different ethnic groups? What tension has this caused?"]
+    },
+    {
+      id:"germany", name:"Germany", color:"#5c5240",
+      example:"Germany in German South-West Africa (modern Namibia)",
+      regions:["German South-West Africa (modern Namibia)","German East Africa (modern Tanzania)","Cameroon","Togoland"],
+      angles:{
+        political:["Germany only unified as a country in 1871 — how did it acquire African colonies so quickly afterwards?","How did German administration typically respond to African resistance?","What happened to Germany's African colonies after it lost World War I?"],
+        economic:["How did Germany confiscate land for German settler farms in your region (especially relevant to Namibia)?","What forced-labour systems or cash-crop plantations were set up?","What infrastructure (e.g. railways in East Africa) was built — and who was it built for?"],
+        social:["How was a racial hierarchy enforced in German colonies?","How limited was education and opportunity for local Africans?"]
+      },
+      negative:["What happened to the Herero and Nama peoples in German South-West Africa between 1904–1908 — what were the causes and the consequences?","What happened during the Maji Maji Rebellion in German East Africa (1905–1907), and what tactics did Germany use to crush it?","Was land confiscated for German settlers? How?","How limited were rights or education for Africans under German rule?"],
+      positive:["Were any railway lines built in German East Africa — who used them?","Were any schools set up — who could actually attend?"],
+      caution:"Historians differ on how much lasting positive legacy German colonial rule left, compared with longer-ruling empires. What does your own research find — and how might the shorter, more violent nature of German rule explain this?",
+      sources:["German colonial military orders (e.g. General von Trotha's 1904 order)","Photographs connected to the Herero/Nama camps","Missionary accounts from German East Africa","Germany's 2021 formal statement on the Herero-Nama genocide"],
+      legacy:["Is there an ongoing debate in Namibia today over reparations or land ownership?","What did Germany formally recognise in 2021, and why did it take so long?","Did ethnic classification introduced under German (and later Belgian) rule contribute to later tensions in Rwanda and Burundi? How?"]
+    },
+    {
+      id:"belgium", name:"Belgium", color:"#45664a",
+      example:"Belgium in Congo Free State / Belgian Congo (modern DR Congo)",
+      regions:["Congo Free State / Belgian Congo (modern DR Congo)","Rwanda-Urundi (modern Rwanda and Burundi)"],
+      angles:{
+        political:["The Congo Free State wasn't a normal colony — who actually owned it, and why did that change in 1908?","How much political power or representation did Congolese people have before independence in 1960?","How did rushed, unprepared independence in 1960 feed into the political crisis that followed?"],
+        economic:["How did the rubber quota system work — what happened to villages or workers who failed to meet quotas?","What role did mining (copper, diamonds, later uranium) play in the colonial economy?","Who actually benefited from Congo's resource wealth?"],
+        social:["How limited was education for Congolese people under Belgian rule (how many Congolese university graduates existed by 1960)?","How were local chiefs and governance structures used or undermined by colonial administrators?"]
+      },
+      negative:["What atrocities occurred under the Congo Free State's rubber quota system, and who was responsible?","How limited was education and administrative representation for Congolese people by independence?","Did political instability follow independence — how might it connect to how the country was left?","Is there evidence of population loss during the Congo Free State period? What does the evidence show?"],
+      positive:["Was infrastructure built to move resources — how much did it actually benefit local communities?","Was there later investment in mining infrastructure (e.g. in Katanga)? Who benefited?"],
+      caution:"Many historians argue Belgian rule left very few genuinely positive legacies. Does your own research support or challenge that view? Be ready to explain your evidence either way.",
+      sources:["The Casement Report (a 1904 British investigation into Congo Free State abuses)","Photographs collected by the Congo Reform Association (E. D. Morel)","King Leopold II's own speeches or justifications","Missionary accounts from the Congo"],
+      legacy:["Is there ongoing political instability in DR Congo today — how might it trace back to rushed decolonisation?","Does DR Congo have enormous mineral wealth (e.g. cobalt) alongside continued poverty and conflict? Why might that be?","Recall the Berlin Conference cartoon your class studied — what does it show about how the Congo was divided up?"]
+    },
+    {
+      id:"portugal", name:"Portugal", color:"#6f4468",
+      example:"Portugal in Angola",
+      regions:["Angola","Mozambique","Guinea-Bissau","Cape Verde"],
+      angles:{
+        political:["What was the “assimilado” system, and how many Africans actually gained rights through it?","Why did Portuguese colonies stay under colonial rule for so much longer than British or French ones?","How did independence movements (e.g. led by Amílcar Cabral in Guinea-Bissau) fight for independence?"],
+        economic:["How did the forced-labour system (chibalo) work in Angola and Mozambique?","What cash crops were grown (e.g. coffee in Angola, cotton in Mozambique) — and who profited?","How much did Portugal actually invest back into its colonies, compared with other empires?"],
+        social:["How did the assimilado system divide African society into different classes?","How limited was access to education under Portuguese rule?"]
+      },
+      negative:["How did the forced-labour (chibalo) system operate, and how late did it last?","How limited was investment in African education and infrastructure?","What happened during the long independence wars (1961–1974)?","Did civil war follow independence — how might it connect to colonial-era divisions or Cold War rivalries?"],
+      positive:["Was any infrastructure built in port cities — who actually used it?"],
+      caution:"Historians often rank Portuguese colonial rule among the least developmental of the European empires in Africa. Do you agree, based on your own research?",
+      sources:["Speeches or writings by independence leaders (e.g. Amílcar Cabral)","Portuguese colonial administrative records","Photographs or reports from the independence wars","Missionary records from Angola or Mozambique"],
+      legacy:["Is Portuguese still the official language in your region today?","Did long civil wars follow independence — what were the causes?","Are there still economic or migration ties with Portugal today?"]
+    },
+    {
+      id:"italy", name:"Italy", color:"#2f6e6a",
+      example:"Italy in Libya",
+      regions:["Libya","Eritrea","Italian Somaliland (modern Somalia)","Ethiopia (brief occupation only)"],
+      angles:{
+        political:["Why is Ethiopia's 1896 victory over Italy at the Battle of Adwa historically significant for Africa?","How did fascist Italy's approach to colonial rule change under Mussolini in the 1930s?","What was the international reaction to Italy's 1935–36 invasion of Ethiopia (consider Haile Selassie's League of Nations speech)?"],
+        economic:["What settlement schemes brought Italian farmers to Libya — and what happened to the land they settled on?","How limited was genuine economic development for local people?"],
+        social:["What was Italy's “Italianisation” policy, and how did it affect local culture and language?","How did Italian rule treat local resistance movements and their leaders?"]
+      },
+      negative:["How was Libyan resistance suppressed in the 1930s, including the fate of resistance leader Omar Mukhtar?","Were chemical weapons used during the 1935–36 invasion of Ethiopia? What were the consequences?","What did fascist-era repression and forced labour look like?","Was land taken from local Libyans for Italian settlers — how?"],
+      positive:["Were roads or infrastructure built in Libya — who were they really built for?"],
+      caution:"Infrastructure was built in Libya during Italian rule — but investigate who it was really built for. Did local Libyans benefit, or mainly Italian settlers and the military?",
+      sources:["Haile Selassie's 1936 speech to the League of Nations","Italian colonial propaganda posters","Photographs or accounts of Libyan resistance and Italian camps","League of Nations records on the invasion of Ethiopia"],
+      legacy:["Is there political instability in Libya today that traces back to this period?","How does Ethiopia's national pride connect to having resisted colonisation for most of this period?","Are there ongoing Italy–Libya relations today, including migration issues?","Do colonial-era border decisions still affect Eritrea–Ethiopia relations?"]
+    }
+  ];
+
+  var MASTER = [
+    {group:"Title, Maps & Visuals", marks:"/6", items:[
+      {id:"m1", text:"Title clearly states the Empire AND the Region (e.g. “Britain in Nigeria”)"},
+      {id:"m2", text:"At least one map clearly shows the region and its borders"},
+      {id:"m3", text:"Visuals (photos, diagrams, timelines) are relevant and well integrated — not just decoration"}
+    ]},
+    {group:"Historical Understanding", marks:"/6", items:[
+      {id:"m4", text:"Political change is explained — loss of leaders, changes in local rule"},
+      {id:"m5", text:"Economic change is explained — resource extraction, jobs, infrastructure"},
+      {id:"m6", text:"Social &amp; cultural change is explained — education, religion, traditions, freedoms"}
+    ]},
+    {group:"Positive &amp; Negative Impacts", marks:"/6", items:[
+      {id:"m7", text:"At least 3 negative impacts, each explained with evidence"},
+      {id:"m8", text:"At least 3 positive or lasting impacts, each explained with evidence — or a reasoned explanation of why there are few"}
+    ]},
+    {group:"Primary Sources", marks:"/6", items:[
+      {id:"m9", text:"At least 2 primary sources, clearly referenced and used as evidence"}
+    ]},
+    {group:"Delivery, Organisation &amp; Teamwork", marks:"/6", items:[
+      {id:"m10", text:"Confident, rehearsed delivery with a logical structure — every member contributes clearly and equally"}
+    ]},
+    {group:"Challenge — Legacies Today", marks:"+2 bonus", bonus:true, items:[
+      {id:"m11", text:"At least two specific, well-explained lasting legacies, with reasoning linking past cause to present-day effect"}
+    ]}
+  ];
+
+  var FORMATS = [
+    {id:"presentation", name:"Presentation", kicker:"Slides", desc:"A spoken talk backed by slides — the classic option, and still the easiest to keep tight.", tips:[
+      "Open with a hook — a question, quote or striking image before your title slide",
+      "One big idea per slide — let visuals do the talking, not walls of text",
+      "Give your strongest primary source its own “spotlight” slide",
+      "Use one consistent colour for negative impacts and another for positive impacts, throughout",
+      "Rehearse transitions so every member speaks for a similar length of time",
+      "Close on the legacy question and leave it open for class discussion"
+    ]},
+    {id:"poster", name:"Poster", kicker:"Display", desc:"A single visual document, read up close — every inch has to earn its place.", tips:[
+      "Lead with one dominant visual — a labelled map or striking image readers see first",
+      "Lay content out in clear scannable zones (impacts / sources / legacy), not one dense block",
+      "Colour-code negative and positive impacts consistently",
+      "Annotate your map with labels and arrows, not just an outline",
+      "Feature one primary-source quote in large pull-quote text",
+      "Caption every image — what it shows and why it matters"
+    ]},
+    {id:"video", name:"Video", kicker:"Film", desc:"A short documentary, 2–4 minutes — built to hold attention from the first second.", tips:[
+      "Hook viewers in the first 10 seconds — a question or image, not a title card",
+      "Show a primary source on screen rather than only describing it",
+      "Use maps, images or simple animation over narration instead of reading text aloud",
+      "Caption every source on screen as it appears",
+      "Give every member a clear on-screen or voice-over role",
+      "Structure: hook → political/economic/social change → impacts → legacy → close"
+    ]}
+  ];
+
+  var GLOSSARY = [
+    ["Imperialism","帝国主义"],["Colony","殖民地"],
+    ["Sphere of influence","势力范围"],["Scramble for Africa","瓜分非洲"],
+    ["Berlin Conference","柏林会议"],["Indirect rule","间接统治"],
+    ["Direct rule","直接统治"],["Forced labour","强迫劳动"],
+    ["Resource extraction","资源掠夺"],["Settler","殖民定居者"],
+    ["Resistance","反抗"],["Independence","独立"],
+    ["Legacy","遗留影响"],["Assimilation","同化政策"],
+    ["Primary source","原始/第一手资料"],["Perspective","观点/视角"]
+  ];
+
+  function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+  function slugify(s){
+    return String(s || "").trim().toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"").slice(0,60);
+  }
+  function empireById(id){ return EMPIRES.filter(function(e){ return e.id===id; })[0]; }
+  function formatById(id){ return FORMATS.filter(function(f){ return f.id===id; })[0]; }
+  function totalMasterItems(){ var n=0; MASTER.forEach(function(g){ n+=g.items.length; }); return n; }
+  function genId(){ return Date.now().toString(36) + Math.random().toString(36).slice(2,8); }
+
+  /* ---------- session state ---------- */
+  var app = {
+    db: null,
+    classId: null,
+    groupId: null,
+    ref: null,
+    doc: { members:"", empire:"", format:"", region:"", checks:{}, bibliography:[] },
+    saveTimer: null,
+    dirty: false
+  };
+
+  function showScreen(id){
+    ["screen-class","screen-group","screen-main"].forEach(function(s){
+      document.getElementById(s).hidden = (s !== id);
+    });
+  }
+
+  /* ---------- SCREEN 1: class ---------- */
+  var classGrid = document.getElementById("class-grid");
+  CLASSES.forEach(function(c){
+    var b = document.createElement("button");
+    b.className = "class-btn"; b.type = "button"; b.textContent = c;
+    b.addEventListener("click", function(){ enterClass(c); });
+    classGrid.appendChild(b);
+  });
+
+  function enterClass(classId){
+    app.classId = classId;
+    document.getElementById("group-class-label").textContent = classId;
+    showScreen("screen-group");
+    loadGroupList(classId);
+  }
+  document.getElementById("back-to-class").addEventListener("click", function(){ showScreen("screen-class"); });
+
+  /* ---------- SCREEN 2: group list + create ---------- */
+  var empirePick = document.getElementById("empire-pick");
+  var pickedEmpire = null;
+  EMPIRES.forEach(function(e){
+    var b = document.createElement("button");
+    b.type = "button"; b.className = "empire-opt"; b.textContent = e.name;
+    b.style.setProperty("--e-color", e.color);
+    b.setAttribute("aria-pressed","false");
+    b.addEventListener("click", function(){
+      pickedEmpire = e.id;
+      empirePick.querySelectorAll(".empire-opt").forEach(function(x){ x.setAttribute("aria-pressed", x===b ? "true":"false"); });
+      validateNewGroupForm();
+    });
+    empirePick.appendChild(b);
+  });
+
+  var formatPickSetup = document.getElementById("format-pick-setup");
+  var pickedFormat = null;
+  FORMATS.forEach(function(f){
+    var b = document.createElement("button");
+    b.type = "button"; b.className = "format-opt"; b.textContent = f.name;
+    b.setAttribute("aria-pressed","false");
+    b.addEventListener("click", function(){
+      pickedFormat = f.id;
+      formatPickSetup.querySelectorAll(".format-opt").forEach(function(x){ x.setAttribute("aria-pressed", x===b ? "true":"false"); });
+      validateNewGroupForm();
+    });
+    formatPickSetup.appendChild(b);
+  });
+
+  var newNameEl = document.getElementById("new-groupname");
+  var newMembersEl = document.getElementById("new-members");
+  var createBtn = document.getElementById("create-group-btn");
+  var newGroupStatus = document.getElementById("new-group-status");
+  [newNameEl, newMembersEl].forEach(function(el){ el.addEventListener("input", validateNewGroupForm); });
+
+  function validateNewGroupForm(){
+    createBtn.disabled = !(slugify(newNameEl.value) && newMembersEl.value.trim() && pickedEmpire && pickedFormat);
+  }
+
+  function groupListCollection(classId){
+    return app.db.collection("classes/" + classId + "/groups");
+  }
+
+  function loadGroupList(classId){
+    var listEl = document.getElementById("group-list");
+    listEl.innerHTML = '<div class="status-line">Loading your class’s groups…</div>';
+    if(!app.db){ listEl.innerHTML = ""; return; }
+    groupListCollection(classId).get().then(function(snap){
+      if(snap.empty){ listEl.innerHTML = ""; return; }
+      var html = "";
+      snap.docs.forEach(function(d){
+        var data = d.data() || {};
+        var e = empireById(data.empire);
+        var fmt = formatById(data.format);
+        var checks = data.checks || {};
+        var done = Object.keys(checks).filter(function(k){ return /^m\d+$/.test(k) && checks[k]; }).length;
+        html += '<button type="button" class="group-card" data-id="' + esc(d.id) + '" style="--e-color:' + (e ? e.color : "#a3761f") + '">';
+        html += '<span class="swatch"></span><span class="meta"><span class="g-name">' + esc(data.groupName || d.id) + '</span>';
+        html += '<span class="g-sub">' + esc(data.members || "") + (e ? " · " + e.name : "") + (fmt ? " · " + fmt.name : "") + '</span></span>';
+        html += '<span class="g-progress">' + done + '/' + totalMasterItems() + '</span></button>';
+      });
+      listEl.innerHTML = html;
+      listEl.querySelectorAll(".group-card").forEach(function(card){
+        card.addEventListener("click", function(){ openGroup(classId, card.getAttribute("data-id")); });
+      });
+    }).catch(function(){ listEl.innerHTML = '<div class="status-line">Couldn’t load saved groups right now — you can still start a new one below.</div>'; });
+  }
+
+  createBtn.addEventListener("click", function(){
+    var groupId = slugify(newNameEl.value);
+    if(!groupId || !newMembersEl.value.trim() || !pickedEmpire || !pickedFormat) return;
+    if(!app.db){
+      newGroupStatus.textContent = "Saving isn’t available in this view right now — try reopening the page from Claude.";
+      return;
+    }
+    createBtn.disabled = true;
+    newGroupStatus.textContent = "Setting up your group…";
+    var ref = groupListCollection(app.classId).doc(groupId);
+    var body = {
+      groupName: newNameEl.value.trim(),
+      members: newMembersEl.value.trim(),
+      empire: pickedEmpire,
+      format: pickedFormat,
+      region: "",
+      checks: {},
+      bibliography: [],
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+    ref.set(body).then(function(){
+      openGroup(app.classId, groupId, body);
+    }).catch(function(){
+      newGroupStatus.textContent = "Couldn’t save that — check your connection and try again.";
+      createBtn.disabled = false;
+    });
+  });
+
+  function openGroup(classId, groupId, knownBody){
+    app.groupId = groupId;
+    app.ref = groupListCollection(classId).doc(groupId);
+    function boot(body){
+      app.doc = Object.assign({members:"", empire:"", format:"", region:"", checks:{}, bibliography:[]}, body || {});
+      enterMain();
+    }
+    if(knownBody){ boot(knownBody); return; }
+    app.ref.get().then(function(snap){ boot(snap.exists ? snap.data() : {}); })
+      .catch(function(){ boot({}); });
+  }
+
+  document.getElementById("switch-group-btn").addEventListener("click", function(){
+    flushSave(true);
+    showScreen("screen-group");
+    loadGroupList(app.classId);
+  });
+
+  /* ---------- SCREEN 3: main app ---------- */
+  var elMembers = document.getElementById("f-members");
+  var elRegion = document.getElementById("f-region");
+
+  function enterMain(){
+    document.getElementById("who-class").textContent = app.classId;
+    document.getElementById("who-group").textContent = app.doc.groupName || app.groupId;
+    var e = empireById(app.doc.empire) || EMPIRES[0];
+    document.getElementById("who-empire").textContent = e.name;
+    var f0 = formatById(app.doc.format);
+    document.getElementById("who-format").textContent = f0 ? f0.name : "not set";
+
+    elMembers.value = app.doc.members || "";
+    elRegion.value = app.doc.region || "";
+
+    document.getElementById("dossier-subtitle").textContent =
+      "Your group is investigating " + e.name + ". Research questions only — finding the answers is the task.";
+
+    renderMaster();
+    renderFormats();
+    renderDossier();
+    renderBibliography();
+    renderGlossary();
+    showScreen("screen-main");
+  }
+
+  elMembers.addEventListener("input", function(){ app.doc.members = elMembers.value; queueSave(); });
+  elRegion.addEventListener("input", function(){ app.doc.region = elRegion.value; queueSave(); });
+
+  /* ---------- saving ---------- */
+  var savePill = document.getElementById("save-pill");
+  function queueSave(){
+    app.dirty = true;
+    if(app.saveTimer) clearTimeout(app.saveTimer);
+    app.saveTimer = setTimeout(function(){ flushSave(); }, 700);
+  }
+  function flushSave(immediate){
+    if(app.saveTimer){ clearTimeout(app.saveTimer); app.saveTimer = null; }
+    if(!app.dirty || !app.ref) return;
+    app.dirty = false;
+    app.doc.updatedAt = new Date().toISOString();
+    var payload = {
+      members: app.doc.members || "",
+      region: app.doc.region || "",
+      format: app.doc.format || "",
+      checks: app.doc.checks || {},
+      bibliography: app.doc.bibliography || [],
+      updatedAt: app.doc.updatedAt
+    };
+    app.ref.update(payload).then(function(){
+      savePill.textContent = "Saved";
+      savePill.classList.add("show");
+      setTimeout(function(){ savePill.classList.remove("show"); }, 1400);
+    }).catch(function(){
+      savePill.textContent = "Couldn’t save — check your connection";
+      savePill.classList.add("show");
+    });
+  }
+  window.addEventListener("beforeunload", function(){ flushSave(true); });
+
+  /* ---------- master checklist ---------- */
+  var masterListEl = document.getElementById("master-list");
+  function renderProgress(){
+    var total = totalMasterItems(), done = 0;
+    MASTER.forEach(function(g){ g.items.forEach(function(it){ if(app.doc.checks[it.id]) done++; }); });
+    document.getElementById("progress-num").textContent = done + " / " + total;
+    document.getElementById("progress-bar").style.width = (total ? (done/total*100) : 0) + "%";
+  }
+  function renderMaster(){
+    var html = "";
+    MASTER.forEach(function(g){
+      html += '<div class="crit' + (g.bonus ? " bonus" : "") + '">';
+      html += '<div class="crit-head"><h3>' + g.group + '</h3><span class="marks-badge">' + g.marks + '</span></div>';
+      g.items.forEach(function(it){
+        var checked = !!app.doc.checks[it.id];
+        html += '<div class="check-item' + (checked ? " checked" : "") + '" data-id="' + it.id + '">';
+        html += '<input type="checkbox" id="chk-' + it.id + '"' + (checked ? " checked" : "") + '>';
+        html += '<label for="chk-' + it.id + '">' + it.text + '</label></div>';
+      });
+      html += '</div>';
+    });
+    masterListEl.innerHTML = html;
+    masterListEl.querySelectorAll('input[type="checkbox"]').forEach(function(cb){
+      cb.addEventListener("change", function(){
+        var row = cb.closest(".check-item"); var id = row.getAttribute("data-id");
+        app.doc.checks[id] = cb.checked; row.classList.toggle("checked", cb.checked);
+        queueSave(); renderProgress();
+      });
+    });
+    renderProgress();
+  }
+  document.getElementById("reset-checks").addEventListener("click", function(){
+    Object.keys(app.doc.checks).forEach(function(k){ if(/^(m\d+|fmt-)/.test(k)) delete app.doc.checks[k]; });
+    queueSave(); renderMaster(); renderFormats();
+  });
+
+  /* ---------- format card (single chosen format) ---------- */
+  var formatGridEl = document.getElementById("format-grid");
+  var formatSectionSub = document.getElementById("format-section-sub");
+
+  function renderOneFormatCard(f){
+    var html = '<div class="format-chosen"><div class="format-chosen-head"><div>';
+    html += '<div class="f-kicker">' + f.kicker + '</div><h3>' + f.name + '</h3>';
+    html += '</div><button class="reset-btn" id="change-format-btn" type="button">Change format</button></div>';
+    html += '<div class="f-desc">' + f.desc + '</div>';
+    html += '<div class="tips-grid">';
+    f.tips.forEach(function(tip, i){
+      var id = "fmt-" + f.id + "-" + i;
+      var checked = !!app.doc.checks[id];
+      html += '<div class="check-item' + (checked ? " checked" : "") + '" data-id="' + id + '">';
+      html += '<input type="checkbox" id="chk-' + id + '"' + (checked ? " checked" : "") + '>';
+      html += '<label for="chk-' + id + '">' + tip + '</label></div>';
+    });
+    html += '</div></div>';
+    formatGridEl.innerHTML = html;
+    formatGridEl.querySelectorAll('input[type="checkbox"]').forEach(function(cb){
+      cb.addEventListener("change", function(){
+        var row = cb.closest(".check-item"); var id = row.getAttribute("data-id");
+        app.doc.checks[id] = cb.checked; row.classList.toggle("checked", cb.checked);
+        queueSave();
+      });
+    });
+    document.getElementById("change-format-btn").addEventListener("click", function(){
+      renderFormatChooser();
+    });
+  }
+
+  function renderFormatChooser(){
+    var html = '<div class="format-choose-box"><p>Which format is your group doing?</p><div class="format-pick" id="format-pick-main"></div></div>';
+    formatGridEl.innerHTML = html;
+    var pick = document.getElementById("format-pick-main");
+    FORMATS.forEach(function(f){
+      var b = document.createElement("button");
+      b.type = "button"; b.className = "format-opt"; b.textContent = f.name;
+      b.setAttribute("aria-pressed", app.doc.format === f.id ? "true" : "false");
+      b.addEventListener("click", function(){
+        app.doc.format = f.id;
+        document.getElementById("who-format").textContent = f.name;
+        queueSave();
+        renderFormats();
+      });
+      pick.appendChild(b);
+    });
+  }
+
+  function renderFormats(){
+    var f = formatById(app.doc.format);
+    formatSectionSub.textContent = f
+      ? "Your group is doing a " + f.name.toLowerCase() + ". Use this checklist for the creative touches."
+      : "Pick a format to see its checklist.";
+    if(f){ renderOneFormatCard(f); } else { renderFormatChooser(); }
+  }
+
+  /* ---------- dossier (single empire, questions only) ---------- */
+  var dossierEl = document.getElementById("dossier-panel");
+  function listItems(arr){ return arr.map(function(t){ return "<li>" + t + "</li>"; }).join(""); }
+
+  function renderDossier(){
+    var e = empireById(app.doc.empire) || EMPIRES[0];
+    var html = '<div class="dossier" style="--e-color:' + e.color + '">';
+    html += '<div class="dossier-head"><div class="tag">Step 1 — choose your region</div><h3>' + e.name + '</h3>';
+    html += '<div class="example">Title example: “' + e.example + '”</div></div>';
+    html += '<div class="dossier-body">';
+
+    html += '<div><div class="block-label">Regions to choose from</div><div class="chip-row">';
+    e.regions.forEach(function(r){
+      var pressed = app.doc.region === r;
+      html += '<button class="chip" data-region="' + esc(r) + '" aria-pressed="' + pressed + '">' + r + '</button>';
+    });
+    html += '</div></div>';
+
+    html += '<div><div class="block-label">Step 2 — research the impact</div><div class="angles">';
+    html += '<div class="angle"><h4>Political</h4><ul>' + listItems(e.angles.political) + '</ul></div>';
+    html += '<div class="angle"><h4>Economic</h4><ul>' + listItems(e.angles.economic) + '</ul></div>';
+    html += '<div class="angle"><h4>Social &amp; cultural</h4><ul>' + listItems(e.angles.social) + '</ul></div>';
+    html += '</div></div>';
+
+    html += '<div><div class="block-label">Step 3 — investigate impacts (find evidence for 3+ each)</div><div class="impacts">';
+    html += '<div class="impact-col neg"><h4>Negative — investigate</h4><ul>' + listItems(e.negative) + '</ul></div>';
+    html += '<div class="impact-col pos"><h4>Positive / lasting — investigate</h4><ul>' + listItems(e.positive) +
+      (e.caution ? '<div class="caution">' + e.caution + '</div>' : '') + '</ul></div>';
+    html += '</div></div>';
+
+    html += '<div class="two-col">';
+    html += '<div class="list-card"><h4>Where to look for primary sources</h4><ul>' + listItems(e.sources) + '</ul></div>';
+    html += '<div class="list-card"><h4>Challenge — legacies today</h4><ul>' + listItems(e.legacy) + '</ul></div>';
+    html += '</div>';
+
+    html += '</div></div>';
+    dossierEl.innerHTML = html;
+
+    dossierEl.querySelectorAll(".chip").forEach(function(chip){
+      chip.addEventListener("click", function(){
+        app.doc.region = chip.getAttribute("data-region");
+        elRegion.value = app.doc.region;
+        queueSave(); renderDossier();
+      });
+    });
+  }
+
+  /* ---------- bibliography ---------- */
+  var biblioListEl = document.getElementById("biblio-list");
+  function renderBibliography(){
+    var items = app.doc.bibliography || [];
+    if(!items.length){ biblioListEl.innerHTML = ""; }
+    var html = "";
+    items.forEach(function(it, i){
+      html += '<div class="biblio-row" data-id="' + esc(it.id) + '"><span class="num">' + (i+1) + '.</span>';
+      html += '<textarea placeholder="Author/Organisation, “Title,” Website or Publisher, Date. Link if online.">' + esc(it.text || "") + '</textarea>';
+      html += '<button class="del" type="button" title="Remove source">✕</button></div>';
+    });
+    biblioListEl.innerHTML = html;
+    biblioListEl.querySelectorAll(".biblio-row").forEach(function(row){
+      var id = row.getAttribute("data-id");
+      var ta = row.querySelector("textarea");
+      ta.addEventListener("input", function(){
+        var entry = (app.doc.bibliography || []).filter(function(x){ return x.id === id; })[0];
+        if(entry){ entry.text = ta.value; queueSave(); }
+      });
+      row.querySelector(".del").addEventListener("click", function(){
+        app.doc.bibliography = (app.doc.bibliography || []).filter(function(x){ return x.id !== id; });
+        queueSave(); renderBibliography();
+      });
+    });
+  }
+  document.getElementById("add-source-btn").addEventListener("click", function(){
+    app.doc.bibliography = app.doc.bibliography || [];
+    app.doc.bibliography.push({id: genId(), text: ""});
+    queueSave(); renderBibliography();
+    var rows = biblioListEl.querySelectorAll("textarea");
+    if(rows.length) rows[rows.length-1].focus();
+  });
+
+  /* ---------- glossary ---------- */
+  function renderGlossary(){
+    var html = "";
+    GLOSSARY.forEach(function(pair){
+      html += '<div class="gloss-row"><span>' + pair[0] + '</span><span class="zh">' + pair[1] + '</span></div>';
+    });
+    document.getElementById("gloss-grid").innerHTML = html;
+  }
+
+  /* ---------- boot ---------- */
+  function start(){
+    showScreen("screen-class");
+    if(window.claude && window.claude.use){
+      window.claude.use("db").then(function(db){ app.db = db; }).catch(function(){ app.db = null; });
+    }
+  }
+
+  if(window.claude && window.claude.hot){
+    window.claude.hot.ready ? window.claude.hot.ready(start) : start();
+  } else {
+    start();
+  }
+})();
+</script>
+</body>
 </html>
